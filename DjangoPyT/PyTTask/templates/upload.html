@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Something</title>
+</head>
+<body>
+    <h1>Upload file</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="document">
+        <input class="text" type="text" placeholder="Column name:" name="text">
+        <button type="submit">Submit!</button>
+    </form>
+    <p>Sorted: </p>
+    {% for j in sorted %}
+        <span>{{ j }}<br></span>
+    {% endfor %}
+</body>
+</html>
