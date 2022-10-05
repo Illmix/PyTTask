@@ -1,5 +1,6 @@
 import argparse
 from csv import DictReader
+import sys
 
 parser = argparse.ArgumentParser()
 with open("persons.csv", 'r', encoding='utf-8') as f:
@@ -14,23 +15,16 @@ with open("persons.csv", 'r', encoding='utf-8') as f:
                 persons[name] = []
         for name in column_names:
             persons[name].append(row[name])
-parser.add_argument('--column', '--list', dest='column_name', nargs='+', type=str,
-                    help=f'Enter one of the column names: {", ".join(column_names)}.'
-                         f' Do the same, but add stdout at the end to output the list', required=True)
+parser.add_argument('--column', dest='column_name', type=str,
+                    help=f'Enter one of the column names: {", ".join(column_names)}.', required=True)
 args = parser.parse_args()
-if args.column_name[0] not in column_names:
-    print(f'Enter one of the column names: {", ".join(column_names)}')
-try:
-    if args.column_name[1] == 'stdout':
-        persons[args.column_name[0]].sort()
-        for x in persons[args.column_name[0]]:
-            print(x)
-    else:
-        print(f'Unknown command {args.column_name[1]}. To see a list of commands, run: python sort_persons.py -h')
-except IndexError:
-    with open(f'{args.column_name[0]}.txt', 'w') as f:
-        persons[args.column_name[0]].sort()
-        for x in persons[args.column_name[0]]:
+if args.column_name not in column_names:
+    print(f'Enter one of the column names: {", ".join(column_names)}',  file=sys.stdout)
+else:
+    with open(f'{args.column_name}.txt', 'w', encoding='utf-8') as f:
+        persons[args.column_name].sort()
+        for x in persons[args.column_name]:
             f.write(x)
             f.write('\n')
-    print(f'The result is saved in {args.column_name[0]}.txt')
+            print(x, file=sys.stdout)
+    print(f'The result is saved in {args.column_name}.txt', file=sys.stdout)
